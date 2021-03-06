@@ -8,7 +8,7 @@ class FileManager {
     fs.mkdir(
       path.join(FileManager.UPLOADS_FOLDER, "121"),
       { recursive: true },
-      () => {}
+      null
     );
   };
 }
