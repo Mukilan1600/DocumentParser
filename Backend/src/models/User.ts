@@ -41,7 +41,19 @@ export const findByUsername = async (
   callback?: DocumentCallback
 ) => {
   try {
-    await User.findOne({ username }, callback);
+    await User.findOne({ username: username }, callback);
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const comparePassword = async (
+  hash: string,
+  password: string,
+  callback?: (err: CallbackError, isMatch: boolean) => void
+) => {
+  try {
+    bcrypt.compare(password, hash, callback);
   } catch (err) {
     throw err;
   }
