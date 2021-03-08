@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import ApiRoutes from "./api";
 
+import passport from 'passport'
+import initializePassport from './auth/Auth'
+
 dotenv.config();
 mongoose.connect(
   process.env.MONGODB_URL,
@@ -21,6 +24,8 @@ mongoose.connect(
 const app = express();
 
 app.use(express.json())
+app.use(passport.initialize())
+initializePassport(passport)
 
 app.use('/api',ApiRoutes)
 

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import JWT from "jsonwebtoken";
+import passport from "passport";
 import FileManager from "../filemanager/FileManager";
 import * as User from "../models/User";
 
@@ -46,5 +47,9 @@ router.post("/login", (req, res) => {
     });
   });
 });
+
+router.post('/authenticate', passport.authenticate("jwt", {session: false}), (req,res) => {
+  return res.json(req.user)
+})
 
 export default router;
