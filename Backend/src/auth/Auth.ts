@@ -6,7 +6,7 @@ import * as User from "../models/User";
 
 const JWTStrategy = passportjwt.Strategy;
 
-interface IJwtPayload {
+export interface IJwtPayload {
   id: string;
   username: string;
   name: string;

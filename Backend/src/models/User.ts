@@ -58,3 +58,27 @@ export const comparePassword = async (
     throw err;
   }
 };
+
+export const getFiles = async (id: string): Promise<string[]> => {
+  try {
+    const doc = await User.findById(id);
+    return doc.files;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const findAndAddFile = async (id: string, filename: string) => {
+  try {
+    User.findByIdAndUpdate(
+      id,
+      { $addToSet: { files: filename } },
+      { new: true },
+      (err, doc) => {
+        if(err) throw err;
+      }
+    );
+  } catch (err) {
+    throw err;
+  }
+};
