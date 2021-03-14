@@ -41,7 +41,7 @@ export const findByUsername = async (
   callback?: DocumentCallback
 ) => {
   try {
-    await User.findOne({ username: username }, callback);
+    await User.findOne({ username }, callback);
   } catch (err) {
     throw err;
   }
@@ -73,11 +73,16 @@ export const findAndAddFile = async (id: string, filename: string) => {
     User.findByIdAndUpdate(
       id,
       { $addToSet: { files: filename } },
-      { new: true },
-      (err, doc) => {
-        if(err) throw err;
-      }
+      { new: true }
     );
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const findAndRemoveFile = async (id: string, filename: string) => {
+  try {
+    User.findByIdAndUpdate(id, { $pullAll: { files: [filename] } });
   } catch (err) {
     throw err;
   }

@@ -14,7 +14,7 @@ router.get(
     try {
       const user = req.user as IJwtPayload;
       const files = await User.getFiles(user.id);
-      return res.json({ files: files });
+      return res.json({ files });
     } catch (err) {
       return res.status(500).json({ msg: "Internal server error" });
     }
@@ -36,6 +36,19 @@ router.post(
     } catch (err) {
       if (err) return res.status(500).json({ msg: "Internal server error" });
     }
+  }
+);
+
+router.post(
+  "/removefile",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    if (!req.body.filename)
+      return res.status(400).json({ msg: "Invalid / No File" });
+    const user = req.user as IJwtPayload;
+    FileManager.removeFile(user.id, req.body.filename, () => {
+      return res.json({ msg: "File removed" });
+    });
   }
 );
 

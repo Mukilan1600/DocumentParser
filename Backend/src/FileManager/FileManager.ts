@@ -1,12 +1,12 @@
 import fs from "fs";
 import path from "path";
-import multer from 'multer'
+import multer from "multer";
 
-import { IJwtPayload } from '../auth/Auth'
+import { IJwtPayload } from "../auth/Auth";
 
 class FileManager {
   static UPLOADS_FOLDER = "./uploads";
-  
+
   static Storage = multer.diskStorage({
     destination: (req, file, cb) => {
       const user = req.user as IJwtPayload;
@@ -16,7 +16,7 @@ class FileManager {
       cb(null, file.originalname);
     },
   });
-  
+
   static upload = multer({
     storage: FileManager.Storage,
   });
@@ -26,6 +26,13 @@ class FileManager {
       path.join(FileManager.UPLOADS_FOLDER, foldername),
       { recursive: true },
       () => {}
+    );
+  };
+
+  static removeFile = (foldername: string, filename: string, callback: () => void) => {
+    fs.rm(
+      path.join(FileManager.UPLOADS_FOLDER, foldername, filename),
+      callback
     );
   };
 }
