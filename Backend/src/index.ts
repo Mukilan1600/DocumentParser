@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cookieParser from 'cookie-parser'
 import ApiRoutes from "./api";
 
 import passport from 'passport'
@@ -23,6 +24,7 @@ mongoose.connect(
 
 const app = express();
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(passport.initialize())
 initializePassport(passport)

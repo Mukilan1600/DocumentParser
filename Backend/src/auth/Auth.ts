@@ -1,5 +1,5 @@
 import { PassportStatic } from "passport";
-import passportjwt from "passport-jwt";
+import passportjwt, {JwtFromRequestFunction} from "passport-jwt";
 
 import { CallbackError } from "mongoose";
 import * as User from "../models/User";
@@ -13,7 +13,9 @@ export interface IJwtPayload {
   files: [string];
 }
 
-const jwtExtractor = passportjwt.ExtractJwt.fromAuthHeaderAsBearerToken();
+const jwtExtractor : JwtFromRequestFunction  = (req) => {
+  return req.cookies.jwt??""
+};
 export default (passport: PassportStatic) => {
   passport.use(
     "jwt",

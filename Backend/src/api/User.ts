@@ -40,7 +40,8 @@ router.post("/login", (req, res) => {
         const token = JWT.sign(user, process.env.JWT_SECRET, {
           expiresIn: "7d",
         });
-        return res.json({ token, user, msg: "Log in successful" });
+        res.cookie("jwt", token);
+        return res.json({ user, msg: "Log in successful" });
       } else {
         return res.json({ msg: "Invalid username/password" });
       }
@@ -50,6 +51,10 @@ router.post("/login", (req, res) => {
 
 router.post('/authenticate', passport.authenticate("jwt", {session: false}), (req,res) => {
   return res.json(req.user)
+})
+
+router.get('/logout', (req,res) => {
+  return res.clearCookie("jwt").json({msg: "Logout successful"})
 })
 
 export default router;
