@@ -13,10 +13,10 @@ router.post("/register", (req, res) => {
     password: req.body.password,
   });
   User.findByUsername(newUser.username, (err, doc) => {
-    if (doc) return res.json({ msg: "Username already exists" });
+    if (doc) return res.status(409).json({ msg: "Username already exists" });
     User.addUser(newUser, (err) => {
       if (err) return res.status(500).json({ msg: "Internal server error" });
-      FileManager.createFolder(newUser.id)
+      FileManager.createFolder(newUser.id);
       return res.json({ msg: "User register successfully" });
     });
   });
@@ -27,7 +27,8 @@ router.post("/login", (req, res) => {
   const password = req.body.password;
   User.findByUsername(username, (err, doc) => {
     if (err) return res.status(500).json({ msg: "Internal server error" });
-    if (!doc) return res.json({ msg: "Invalid username / password" });
+    if (!doc)
+      return res.status(401).json({ msg: "Invalid username / password" });
     User.comparePassword(doc.password, password, (err, isMatch) => {
       if (err) return res.status(500).json({ msg: "Internal server error" });
       if (isMatch) {
@@ -40,21 +41,29 @@ router.post("/login", (req, res) => {
         const token = JWT.sign(user, process.env.JWT_SECRET, {
           expiresIn: "7d",
         });
-        res.cookie("jwt", token);
+        res.cookie("jwt", token, {
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
         return res.json({ user, msg: "Log in successful" });
       } else {
-        return res.json({ msg: "Invalid username/password" });
+        return res.status(401).json({ msg: "Invalid username/password" });
       }
     });
   });
 });
 
-router.post('/authenticate', passport.authenticate("jwt", {session: false}), (req,res) => {
-  return res.json(req.user)
-})
+router.get(
+  "/authenticate",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    return res.json(req.user);
+  }
+);
 
-router.get('/logout', (req,res) => {
-  return res.clearCookie("jwt").json({msg: "Logout successful"})
-})
+router.get("/logout", (req, res) => {
+  return res
+    .clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true })
+    .json({ msg: "Logout successful" });
+});
 
 export default router;

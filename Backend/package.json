@@ -1,7 +1,7 @@
 {
-  "name": "documentparser",
+  "name": "documentparser_backend",
   "version": "1.0.0",
-  "description": "A server based document storage with text processing features.",
+  "description": "API for A server based document storage with text processing features.",
   "main": "index.js",
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",

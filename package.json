@@ -1,0 +1,25 @@
+{
+  "name": "documentparser",
+  "version": "1.0.0",
+  "description": "A server based document storage with text processing features",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^6.0.0"
+  },
+  "scripts": {
+    "dev-server":"cd backend && npm run dev",
+    "dev-client":"cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mukilan1600/DocumentParser.git"
+  },
+  "author": "Mukilan IK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mukilan1600/DocumentParser/issues"
+  },
+  "homepage": "https://github.com/Mukilan1600/DocumentParser#readme"
+}
