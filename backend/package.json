@@ -10,7 +10,7 @@
     "prestart": "npm run build",
     "predev": "npm run devbuild",
     "dev": "nodemon dist/",
-    "start": "nodemon dist/"
+    "start": "node dist/"
   },
   "author": "Mukilan IK",
   "license": "ISC",
