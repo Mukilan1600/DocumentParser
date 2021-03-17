@@ -19,7 +19,7 @@ router.post(
   "/detect",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    var dataToSend: string;
+    let dataToSend: string;
     const user = req.user as IJwtPayload;
     const python = spawn("python", [
       path.resolve("./ocr-src/ocr.py"),
@@ -27,7 +27,7 @@ router.post(
       req.body.filename,
     ]);
     const start = process.hrtime();
-    python.stdout.on("data", function (data) {
+    python.stdout.on("data", (data) => {
       dataToSend = data.toString();
     });
     python.on("close", (code) => {

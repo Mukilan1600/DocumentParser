@@ -25,11 +25,17 @@ class FileManager {
     fs.mkdir(
       path.join(FileManager.UPLOADS_FOLDER, foldername),
       { recursive: true },
-      () => {}
+      (err) => {
+        if (err) throw err;
+      }
     );
   };
 
-  static removeFile = (foldername: string, filename: string, callback: () => void) => {
+  static removeFile = (
+    foldername: string,
+    filename: string,
+    callback: () => void
+  ) => {
     fs.rm(
       path.join(FileManager.UPLOADS_FOLDER, foldername, filename),
       callback

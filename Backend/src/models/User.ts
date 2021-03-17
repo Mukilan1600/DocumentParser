@@ -70,10 +70,10 @@ export const getFiles = async (id: string): Promise<string[]> => {
 
 export const findAndAddFile = async (id: string, filename: string) => {
   try {
-    User.findByIdAndUpdate(
-      id,
-      { $addToSet: { files: filename } },
-      { new: true }
+    await User.findOneAndUpdate(
+      { _id: id, files: { $ne: filename } },
+      { $push: { files: filename } },
+      { new: true, useFindAndModify: false }
     );
   } catch (err) {
     throw err;
@@ -82,7 +82,7 @@ export const findAndAddFile = async (id: string, filename: string) => {
 
 export const findAndRemoveFile = async (id: string, filename: string) => {
   try {
-    User.findByIdAndUpdate(id, { $pullAll: { files: [filename] } });
+    await User.findByIdAndUpdate(id, { $pullAll: { files: [filename] } });
   } catch (err) {
     throw err;
   }

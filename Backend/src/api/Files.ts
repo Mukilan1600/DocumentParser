@@ -25,13 +25,13 @@ router.post(
   "/addfile",
   passport.authenticate("jwt", { session: false }),
   FileManager.upload.single("file"),
-  (req, res) => {
+  async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ msg: "No file" });
     }
     const user = req.user as IJwtPayload;
     try {
-      User.findAndAddFile(user.id, req.file.filename);
+      await User.findAndAddFile(user.id, req.file.filename);
       return res.json({ msg: "File upload successful" });
     } catch (err) {
       if (err) return res.status(500).json({ msg: "Internal server error" });

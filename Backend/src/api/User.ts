@@ -12,7 +12,7 @@ router.post("/register", (req, res) => {
     username: req.body.username,
     password: req.body.password,
   });
-  User.findByUsername(newUser.username, (err, doc) => {
+  User.findByUsername(newUser.username, (_err, doc) => {
     if (doc) return res.status(409).json({ msg: "Username already exists" });
     User.addUser(newUser, (err) => {
       if (err) return res.status(500).json({ msg: "Internal server error" });
@@ -29,8 +29,8 @@ router.post("/login", (req, res) => {
     if (err) return res.status(500).json({ msg: "Internal server error" });
     if (!doc)
       return res.status(401).json({ msg: "Invalid username / password" });
-    User.comparePassword(doc.password, password, (err, isMatch) => {
-      if (err) return res.status(500).json({ msg: "Internal server error" });
+    User.comparePassword(doc.password, password, (passwordErr, isMatch) => {
+      if (passwordErr) return res.status(500).json({ msg: "Internal server error" });
       if (isMatch) {
         const user = {
           id: doc._id,
