@@ -13,16 +13,12 @@ interface User {
   files: [string];
 }
 
-const fetcher = (url: string) =>
-  fetch(url, { credentials: "include" }).then((res) => res.json());
-
 export default function useUser({
   redirectTo,
   redirectIfFound = false,
 }: useUserProps) {
   const { data, mutate: mutateUser } = useSWR(
-    "http://localhost:8000/api/user/authenticate",
-    fetcher
+    "http://localhost:8000/api/user/authenticate"
   );
   const user = data as User | null;
   useEffect(() => {

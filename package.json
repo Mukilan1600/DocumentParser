@@ -10,7 +10,10 @@
   "scripts": {
     "dev-server":"cd backend && npm run dev",
     "dev-client":"cd frontend && npm run dev",
-    "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\""
+    "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\"",
+    "build": "cd frontend && npm run build",
+    "start-frontend": "npm run start --prefix frontend",
+    "start-backend": "npm run start --prefix backend"
   },
   "repository": {
     "type": "git",
