@@ -62,7 +62,7 @@ router.get(
 
 router.get("/logout", (req, res) => {
   return res
-    .clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true })
+    .clearCookie("jwt")
     .json({ msg: "Logout successful" });
 });
 
