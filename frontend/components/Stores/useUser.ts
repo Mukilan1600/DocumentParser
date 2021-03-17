@@ -18,7 +18,7 @@ export default function useUser({
   redirectIfFound = false,
 }: useUserProps) {
   const { data, mutate: mutateUser } = useSWR(
-    "http://localhost:8000/api/user/authenticate"
+    `${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/user/authenticate`
   );
   const user = data as User | null;
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function useUser({
   }, [user, redirectIfFound, redirectTo]);
 
   const logout = () => {
-    fetch("http://localhost:8000/api/user/logout", {
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/user/logout`, {
       credentials: "include",
     }).then(() => {
       mutateUser(null);

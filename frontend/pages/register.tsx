@@ -33,7 +33,7 @@ export default function Register() {
     }
     setMsg("")
 
-    fetch("http://localhost:8000/api/user/register", {
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

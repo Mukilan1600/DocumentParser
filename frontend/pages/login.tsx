@@ -27,7 +27,7 @@ export default function Login() {
       setError("");
     }
 
-    fetch("http://localhost:8000/api/user/login", {
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

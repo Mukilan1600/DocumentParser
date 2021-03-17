@@ -17,7 +17,7 @@ export default function home() {
     const formData = new FormData();
     formData.append("file", event.target.files[0]);
     try {
-      const res = await fetch("http://localhost:8000/api/file/addfile", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/file/addfile`, {
         method: "POST",
         credentials: "include",
         body: formData,
