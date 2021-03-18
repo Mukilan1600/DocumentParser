@@ -34,11 +34,11 @@ class FileManager {
   static removeFile = (
     foldername: string,
     filename: string,
-    callback: () => void
+    callback: (err: any) => void
   ) => {
     fs.rm(
-      path.join(FileManager.UPLOADS_FOLDER, foldername, filename),
-      callback
+      path.resolve(FileManager.UPLOADS_FOLDER, foldername, filename),
+      callback,
     );
   };
 }

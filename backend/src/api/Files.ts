@@ -47,6 +47,7 @@ router.post(
       return res.status(400).json({ msg: "Invalid / No File" });
     const user = req.user as IJwtPayload;
     FileManager.removeFile(user.id, req.body.filename, () => {
+      User.findAndRemoveFile(user.id, req.body.filename);
       return res.json({ msg: "File removed" });
     });
   }

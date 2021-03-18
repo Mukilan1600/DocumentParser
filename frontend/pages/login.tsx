@@ -4,6 +4,9 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import Container from "../components/Container";
 import useUser from "../components/Stores/useUser";
 
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 export default function Login() {
   const { mutateUser } = useUser({
     redirectTo: "/home",
@@ -12,6 +15,7 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const onValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "username") setUsername(event.target.value);
@@ -26,7 +30,7 @@ export default function Login() {
     } else {
       setError("");
     }
-
+    setLoading(true);
     fetch(`${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/user/login`, {
       method: "POST",
       headers: {
@@ -45,6 +49,9 @@ export default function Login() {
       })
       .catch((err) => {
         setError("Invalid username or password");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -94,6 +101,7 @@ export default function Login() {
               className="bg-blue-500 hover:bg-blue-800 focus:outline-none focus:bg-blue-800 rounded-lg border-2 w-full h-12 text-center text-white"
             >
               Login
+              <FontAwesomeIcon icon={faSpinner} className={`ml-2 animate-spin ${!loading&&"invisible"}`}/>
             </button>
           </div>
           <div

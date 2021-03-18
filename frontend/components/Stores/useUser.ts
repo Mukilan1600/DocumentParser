@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 import useSWR from "swr";
 
@@ -20,6 +20,7 @@ export default function useUser({
   const { data, mutate: mutateUser } = useSWR(
     `${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/user/authenticate`
   );
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const user = data as User | null;
   useEffect(() => {
     if (!redirectTo && !user) return;
@@ -33,13 +34,16 @@ export default function useUser({
   }, [user, redirectIfFound, redirectTo]);
 
   const logout = () => {
+    setLogoutLoading(true);
     fetch(`${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/user/logout`, {
       credentials: "include",
     }).then(() => {
       mutateUser(null);
       Router.push("/login");
+    }).finally(() => {
+      setLogoutLoading(false);
     });
   };
 
-  return { user, mutateUser, logout };
+  return { user, mutateUser, logout, logoutLoading };
 }
