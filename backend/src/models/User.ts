@@ -82,7 +82,11 @@ export const findAndAddFile = async (id: string, filename: string) => {
 
 export const findAndRemoveFile = async (id: string, filename: string) => {
   try {
-    await User.findByIdAndUpdate(id, { $pullAll: { files: [filename] } });
+    await User.findByIdAndUpdate(
+      id,
+      { $pullAll: { files: [filename] } },
+      { useFindAndModify: false }
+    );
   } catch (err) {
     throw err;
   }
