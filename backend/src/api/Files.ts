@@ -60,6 +60,7 @@ router.post(
     if (!req.body.filename)
       return res.status(400).json({ msg: "Invalid or no filename" });
     const user = req.user as IJwtPayload;
+    res.setHeader("Content-Type", "application/octet-stream");
     return res.sendFile(
       path.resolve(FileManager.UPLOADS_FOLDER, user.id, req.body.filename),
       (err) => {

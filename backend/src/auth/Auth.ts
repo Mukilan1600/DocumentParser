@@ -1,5 +1,5 @@
 import { PassportStatic } from "passport";
-import passportjwt, {JwtFromRequestFunction} from "passport-jwt";
+import passportjwt, { JwtFromRequestFunction } from "passport-jwt";
 
 import { CallbackError } from "mongoose";
 import * as User from "../models/User";
@@ -13,8 +13,8 @@ export interface IJwtPayload {
   files: [string];
 }
 
-const jwtExtractor : JwtFromRequestFunction  = (req) => {
-  return req.cookies.jwt??""
+const jwtExtractor: JwtFromRequestFunction = (req) => {
+  return req.cookies.jwt ?? "";
 };
 export default (passport: PassportStatic) => {
   passport.use(
@@ -26,8 +26,8 @@ export default (passport: PassportStatic) => {
           user.id,
           (err: CallbackError, doc: User.IUser) => {
             if (err) callback(err, null);
-            if (!doc) callback(null, false);
-            callback(null, user);
+            else if (!doc) callback(null, false);
+            else callback(null, user);
           }
         );
       }
