@@ -99,10 +99,10 @@ export default function FilesList({ files, mutateFiles }: FileListProps) {
             </div>
             <div>
               <FontAwesomeIcon
-                icon={downloading && downloading === i ? faSpinner : faDownload}
+                icon={downloading !== null && downloading === i ? faSpinner : faDownload}
                 color="green"
                 className={`cursor-pointer ${
-                  downloading && downloading === i && "animate-spin"
+                  downloading !== null && downloading === i && "animate-spin"
                 }`}
                 onClick={onDownload.bind(this, file, i)}
               />
