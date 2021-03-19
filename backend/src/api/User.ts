@@ -1,6 +1,7 @@
 import { Router } from "express";
 import JWT from "jsonwebtoken";
 import passport from "passport";
+import { IJwtPayload } from "../auth/Auth";
 import FileManager from "../filemanager/FileManager";
 import * as User from "../models/User";
 
@@ -30,7 +31,8 @@ router.post("/login", (req, res) => {
     if (!doc)
       return res.status(401).json({ msg: "Invalid username / password" });
     User.comparePassword(doc.password, password, (passwordErr, isMatch) => {
-      if (passwordErr) return res.status(500).json({ msg: "Internal server error" });
+      if (passwordErr)
+        return res.status(500).json({ msg: "Internal server error" });
       if (isMatch) {
         const user = {
           id: doc._id,
@@ -55,16 +57,24 @@ router.post("/login", (req, res) => {
 router.get(
   "/authenticate",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    if(req.user)
-      return res.json(req.user);
+  async (req, res) => {
+    if (req.user) {
+      var JWTUser = req.user as IJwtPayload;
+      User.findByUsername(JWTUser.username, (err, user) => {
+        if (err) return res.status(500).json({ msg: "Interal server error" });
+        return res.json({
+          id: user._id,
+          username: user.username,
+          name: user.name,
+          files: user.files,
+        });
+      });
+    }
   }
 );
 
 router.get("/logout", (req, res) => {
-  return res
-    .clearCookie("jwt")
-    .json({ msg: "Logout successful" });
+  return res.clearCookie("jwt").json({ msg: "Logout successful" });
 });
 
 export default router;
