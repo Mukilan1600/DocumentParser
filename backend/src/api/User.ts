@@ -59,7 +59,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     if (req.user) {
-      var JWTUser = req.user as IJwtPayload;
+      const JWTUser = req.user as IJwtPayload;
       User.findByUsername(JWTUser.username, (err, user) => {
         if (err) return res.status(500).json({ msg: "Interal server error" });
         return res.json({
