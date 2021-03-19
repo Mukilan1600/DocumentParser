@@ -38,7 +38,7 @@ export default function Home(props: HomeProps) {
         setMsg(data.msg);
         var newFiles = [...files];
         newFiles.push(event.target.files[0].name);
-        mutateFiles(newFiles);
+        mutateFiles({files: newFiles}, false);
         setMsgTimeout();
       }
     } catch (err) {
