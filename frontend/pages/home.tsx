@@ -6,6 +6,8 @@ import FileList from "../components/FilesList";
 import useUser from "../components/Stores/useUser";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Modal from "../components/Modal";
+import OCRModal from "../components/OCRModal";
 
 var msgTimeout: NodeJS.Timeout;
 
@@ -17,7 +19,12 @@ export default function Home(props: HomeProps) {
   const { files, mutateFiles } = useFiles(props.defaultFiles);
   const [msg, setMsg] = useState("");
   const [fileLoading, setFileLoading] = useState(false);
+  const [OCRImage, setOCRImage] = useState(-1);
   useUser({ redirectTo: "/login" });
+
+  const onCloseModal = () => {
+    setOCRImage(-1);
+  }
 
   const onFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files.length < 1) return;
@@ -38,7 +45,7 @@ export default function Home(props: HomeProps) {
         setMsg(data.msg);
         var newFiles = [...files];
         newFiles.push(event.target.files[0].name);
-        mutateFiles({files: newFiles}, false);
+        mutateFiles({ files: newFiles }, false);
         setMsgTimeout();
       }
     } catch (err) {
@@ -84,7 +91,8 @@ export default function Home(props: HomeProps) {
           onChange={onFileChange}
         />
       </div>
-      <FileList files={files} mutateFiles={mutateFiles} />
+      <FileList files={files} mutateFiles={mutateFiles} setOcrImageIndex={setOCRImage} />
+      <OCRModal files={files} ocrImageIndex={OCRImage} onClose={onCloseModal}/>
     </div>
   );
 }

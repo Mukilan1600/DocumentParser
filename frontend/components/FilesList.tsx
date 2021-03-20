@@ -3,17 +3,23 @@ import {
   faSpinner,
   faTrash,
   faDownload,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { saveAs } from "file-saver";
 
 interface FileListProps {
   files: [string];
   mutateFiles: (data?: any, shouldRevalidate?: boolean) => Promise<any>;
+  setOcrImageIndex: Dispatch<SetStateAction<number>>;
 }
 
-export default function FilesList({ files, mutateFiles }: FileListProps) {
+export default function FilesList({
+  files,
+  mutateFiles,
+  setOcrImageIndex,
+}: FileListProps) {
   const [deleting, setDeleting] = useState<number>(null);
   const [downloading, setDownloading] = useState<number>(null);
 
@@ -51,17 +57,16 @@ export default function FilesList({ files, mutateFiles }: FileListProps) {
       headers: {
         "Content-Type": "application/json",
       },
-      method: "POST",
+      method: "GET",
       credentials: "include",
-      body: JSON.stringify({
-        filename,
-      }),
     };
-
-    fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/file/getfile`,
-      options
-    )
+    var url = new URL(
+      `${process.env.NEXT_PUBLIC_SERVER_END_POINT}/api/file/getfile`
+    );
+    const queryParams = { filename };
+    url.search = new URLSearchParams(queryParams).toString();
+    console.log(url.toString());
+    fetch(url.toString(), options)
       .then(async (res) => {
         if (res.status === 200) {
           var blob = await res.blob();
@@ -86,33 +91,37 @@ export default function FilesList({ files, mutateFiles }: FileListProps) {
             <FontAwesomeIcon icon={faFileImage} />{" "}
             <span title={file}>{file}</span>
           </div>
-          <div className="flex space-x-4">
-            <div>
-              <FontAwesomeIcon
-                icon={deleting && deleting === i ? faSpinner : faTrash}
-                color="red"
-                className={`cursor-pointer ${
-                  deleting && deleting === i && "animate-spin"
-                }`}
-                onClick={onDelete.bind(this, file, i)}
-              />
-            </div>
-            <div>
-              <FontAwesomeIcon
-                icon={
-                  downloading !== null && downloading === i
-                    ? faSpinner
-                    : faDownload
-                }
-                color={`${
-                  downloading !== null && downloading !== i ? "grey" : "green"
-                }`}
-                className={`${downloading === null && "cursor-pointer"} ${
-                  downloading !== null && downloading === i && "animate-spin"
-                }`}
-                onClick={onDownload.bind(this, file, i)}
-              />
-            </div>
+          <div className="flex items-center space-x-4">
+            <FontAwesomeIcon
+              icon={deleting !== null && deleting === i ? faSpinner : faTrash}
+              color="red"
+              className={`cursor-pointer ${
+                deleting !== null && deleting === i && "animate-spin"
+              }`}
+              onClick={onDelete.bind(this, file, i)}
+            />
+            <FontAwesomeIcon
+              icon={
+                downloading !== null && downloading === i
+                  ? faSpinner
+                  : faDownload
+              }
+              color={`${
+                downloading !== null && downloading !== i ? "grey" : "green"
+              }`}
+              className={`${downloading === null && "cursor-pointer"} ${
+                downloading !== null && downloading === i && "animate-spin"
+              }`}
+              onClick={
+                downloading === null ? onDownload.bind(this, file, i) : null
+              }
+            />
+            <FontAwesomeIcon
+              icon={faEye}
+              color="blue"
+              className="cursor-pointer"
+              onClick={setOcrImageIndex.bind(this, i)}
+            />
           </div>
         </div>
       ))}

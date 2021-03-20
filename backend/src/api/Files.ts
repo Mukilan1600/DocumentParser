@@ -53,16 +53,17 @@ router.post(
   }
 );
 
-router.post(
+router.get(
   "/getfile",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    if (!req.body.filename)
+    if (!req.query.filename)
       return res.status(400).json({ msg: "Invalid or no filename" });
     const user = req.user as IJwtPayload;
     res.setHeader("Content-Type", "application/octet-stream");
+    const filename = req.query.filename as string
     return res.sendFile(
-      path.resolve(FileManager.UPLOADS_FOLDER, user.id, req.body.filename),
+      path.resolve(FileManager.UPLOADS_FOLDER, user.id, filename),
       (err) => {
         if (err) return res.status(404).json({ msg: "File not found" });
       }
